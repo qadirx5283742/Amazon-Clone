@@ -1,7 +1,7 @@
 import { Text } from "react-native";
 
-export default function Home() {
+export default function Cart() {
     return (
-        <Text>Home</Text>
+        <Text>Cart</Text>
     )
 };
