@@ -46,7 +46,6 @@ export default function HeaderSearch() {
         </Pressable>
       )}
 
-      {/* Make the wrapper pressable so taps always navigate to (search) */}
       <Pressable onPress={goToSearch} style={{ flex: 1 }}>
         <View
           style={{
@@ -63,6 +62,7 @@ export default function HeaderSearch() {
             shadowRadius: 4,
             elevation: 3,
             paddingRight: 10,
+            paddingLeft: 10,
           }}
         >
           <Icon name="search" color={"black"} size={24} />
@@ -72,6 +72,7 @@ export default function HeaderSearch() {
             onChangeText={setQuery}
             editable={segments[0] === "(search)"}
             placeholder="Search Amazon"
+            placeholderTextColor="#b8bdc5ff"
             style={{
               flex: 1,
               backgroundColor: "white",

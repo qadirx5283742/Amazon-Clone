@@ -1,10 +1,11 @@
 import { AmazonEmber } from "@/utils/constant";
 import Icon from "@expo/vector-icons/Ionicons";
+import { router } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
 
 export function DeliveryLocation() {
     return (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push("/(buyer_zone)/location")}>
             <View style={{
                 flexDirection: "row",
                 backgroundColor: "#c7e8f0",

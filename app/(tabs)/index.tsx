@@ -1,5 +1,6 @@
 import { DeliveryLocation } from "@/components/Shared/DeliveryLocation";
 import { HeaderTabsProps } from "@/components/Shared/header/HeaderTabs";
+import HomeCarousel from "@/components/Shared/Screen/HomeCarousel";
 import { useNavigation } from "expo-router";
 import { useEffect } from "react";
 import { Alert, ScrollView } from "react-native";
@@ -32,6 +33,7 @@ export default function Home() {
             paddingBottom: 10,
         }} showsVerticalScrollIndicator={false}>
             <DeliveryLocation />
+            <HomeCarousel />
         </ScrollView>
     )
 };
