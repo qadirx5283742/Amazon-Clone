@@ -10,7 +10,7 @@ export interface HeaderTabsProps {
     }[] | null;
 }
 
-export default function HeaderTabs({ tabs }: HeaderTabsProps) {
+export function HeaderTabs({ tabs }: HeaderTabsProps) {
     if (!tabs?.length) return null;
 
     return (

@@ -4,7 +4,7 @@ import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import GradientBackground from "./GradientBackground";
 import HeaderSearch from "./HeaderSearch";
-import { HeaderTabsProps } from "./HeaderTabs";
+import { HeaderTabs, HeaderTabsProps } from "./HeaderTabs";
 
 export interface CustomHeaderProps {
     headerSearchShown?: boolean;
@@ -19,7 +19,7 @@ export interface TabsHeaderProps extends BottomTabHeaderProps {
     options: BottomTabNavigationOptions & CustomHeaderProps;
 }
 
-export default function HeaderTabs({ options }: StackHeaderProps | TabsHeaderProps) {
+export default function Header({ options }: StackHeaderProps | TabsHeaderProps) {
     const edgeInsets = useSafeAreaInsets();
     const hasCustomHeader = options.headerLeft || options.headerRight || options.headerTitle;
     if(hasCustomHeader) {
@@ -59,7 +59,9 @@ export default function HeaderTabs({ options }: StackHeaderProps | TabsHeaderPro
                 marginTop: edgeInsets.top
             }}>
                 {options.headerSearchShown && <HeaderSearch />}
+                {options.headerTabsProps && <HeaderTabs {...options.headerTabsProps} />}
             </View>
+            <GradientBackground />
         </View>
     )
 }

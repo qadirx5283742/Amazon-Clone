@@ -1,3 +1,4 @@
+import Header from "@/components/Shared/header/Header";
 import { AmazonEmberBold } from "@/utils/constant";
 import MCIcon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Tabs } from "expo-router";
@@ -34,7 +35,7 @@ export default function TabLayout() {
                         borderTopColor: "lightgray"
                     },
                     tabBarLabel: () => null,
-                    // header:
+                    header: (props) => <Header {...props} />,
                     tabBarIcon: ({ focused }) => (
                         <View style={{
                             flex: 1,

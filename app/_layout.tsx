@@ -12,11 +12,11 @@ export default function Rootlayout() {
         "Amazon-Ember-Light": require("@/assets/fonts/Amazon-Ember-Light.ttf"),
     });
     useEffect(() => {
-        if(loaded || error) {
+        if (loaded || error) {
             setTimeout(() => SplashScreen.hideAsync(), 1000);
         }
     }, [error, loaded]);
-    if(!loaded && !error) {
+    if (!loaded && !error) {
         return null;
     }
     return (

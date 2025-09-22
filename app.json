@@ -10,10 +10,14 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "icons" : {
-        "dark" : "./assets/icons/ios-dark.png",
-        "light" : "./assets/icons/ios-light.png",
-        "tinted" : "./assets/icons/ios-tinted.png"
+      "icon": {
+        "dark": "./assets/icons/ios-dark.png",
+        "light": "./assets/icons/ios-light.png",
+        "tinted": "./assets/icons/ios-tinted.png"
+      },
+      "bundleIdentifier": "com.qadir5283742x.AmazonClone",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -23,7 +27,8 @@
         "monochromeImage": "./assets/icons/ios-tinted.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.qadir5283742x.AmazonClone"
     },
     "web": {
       "output": "static",
@@ -35,9 +40,9 @@
         "expo-splash-screen",
         {
           "image": "./assets/icons/splash-icon-dark.png",
-          "dark" : {
-            "image" : "./assets/icons/splash-icon-light.png",
-            "backgroundColor" : "#000000"
+          "dark": {
+            "image": "./assets/icons/splash-icon-light.png",
+            "backgroundColor": "#000000"
           },
           "imageWidth": 200,
           "resizeMode": "contain",
@@ -49,6 +54,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "fb7d59cd-75ef-40fd-9fef-6991a367db36"
+      }
     }
   }
 }
