@@ -67,9 +67,15 @@ export default function Home() {
                     flexDirection: "row"
                 }}>
                     {deals.map((product) => (
-                        <ProductDealCard key={product.id} product={product} onPress={() => onProductPress(product)} />
+                        <ProductDealCard
+                            key={product.id}
+                            product={product}
+                            onPress={() => onProductPress(product)}
+                        />
                     ))}
-                </View>): <DefaultButton onPress={ onClickAuth }>Sign in Securely</DefaultButton>}
+                </View>) : <DefaultButton onPress={onClickAuth}>
+                    Sign in Securely
+                </DefaultButton>}
             </View>
         </ScrollView>
     )

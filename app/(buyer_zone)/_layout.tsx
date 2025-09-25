@@ -5,16 +5,25 @@ import { router, Stack } from "expo-router";
 export default function Layout() {
     const onGoBack = () => router.back();
     return (
-        <Stack screenOptions={{headerShown: false}}>
+        <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen
-            name="location"
-            options={{
-                headerShown: true,
-                header: (props) => <Header {...props} />,
-                headerLeft: () => <HeaderLeftBack onPress={onGoBack} />,
-                headerTitle: () => <HeaderTitle />,
-            }}
-             />
+                name="location"
+                options={{
+                    headerShown: true,
+                    header: (props) => <Header {...props} />,
+                    headerLeft: () => <HeaderLeftBack onPress={onGoBack} />,
+                    headerTitle: () => <HeaderTitle />,
+                }}
+            />
+            <Stack.Screen
+                name="my_order"
+                options={{
+                    headerShown: true,
+                    header: (props) => <Header {...props} />,
+                    headerLeft: () => <HeaderLeftBack onPress={onGoBack} />,
+                    headerTitle: () => <HeaderTitle />,
+                }}
+            />
         </Stack>
     )
 };
