@@ -1,22 +1,36 @@
 import DefaultButton from "@/components/Shared/DefaultButton";
+import { setSession } from "@/store/slices/authSlice";
+import { supabase } from "@/supabase";
 import { AmazonEmber, AmazonEmberLight } from "@/utils/constant";
 import Checkbox from "expo-checkbox";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Dimensions, Pressable, Text, TextInput, View } from "react-native";
+import { useDispatch } from "react-redux";
 
 enum Step {
   "EMAIL" = 1,
-  "OTP" = 2,
-  "PASSWORD" = 3,
+  "PASSWORD" = 2,
 }
 
 export default function SignIn() {
+  const dispatch = useDispatch();
   const [step, setStep] = useState(Step.EMAIL);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  function login() {}
+  async function login() {
+    try {
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.signInWithPassword({ email, password });
+      dispatch(setSession(session));
+      router.replace("/(tabs)");
+    } catch (error) {
+      console.log(error);
+    }
+  }
   const register = () => router.push("/(auth)/signup");
   return (
     <View
@@ -143,6 +157,7 @@ export default function SignIn() {
           justifyContent: "center",
         }}
       >
+        <Text>By continuing, you agree to Amazon&apos;s </Text>
         <Text
           style={{
             textDecorationLine: "underline",

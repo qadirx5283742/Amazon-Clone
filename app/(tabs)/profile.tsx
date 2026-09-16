@@ -1,21 +1,24 @@
 import DefaultButton from "@/components/Shared/DefaultButton";
 import BottomSheetComponent from "@/components/Shared/Screen/BottomSheetComponent";
 import ProfileUnauthoredBanner from "@/components/Shared/Screen/ProfileUnauthoredBanner";
+import { RootState } from "@/store";
+import { supabase } from "@/supabase";
 import { AmazonEmber } from "@/utils/constant";
 import Icon from "@expo/vector-icons/Ionicons";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { router, useFocusEffect, useNavigation } from "expo-router";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import { useSelector } from "react-redux";
 export default function Profile() {
+  const session = useSelector((state: RootState) => state.auth.session);
   const navigation = useNavigation();
-  const session = false;
-  const isSeller = true;
   const undeliveredCount = 0;
   const bottomSheetRef = useRef<BottomSheet>(null);
   const openSheet = useCallback(() => {
     bottomSheetRef.current?.expand();
   }, []);
+  const [isSeller, setIsSeller] = useState<any>("");
   const onClickLogin = () => router.push("/(auth)");
   const onClickSignUp = () => router.push("/(auth)/signup");
   const clickToOrdered = () => router.push("/(buyer_zone)/my_order");
@@ -40,6 +43,20 @@ export default function Profile() {
       };
     }, []),
   );
+
+  const sellerUser = async () => {
+    let { data, error } = await supabase
+      .from("profiles")
+      .select("is_seller")
+      .eq("id", session?.user.id);
+    if (data && data.length > 0) setIsSeller(data[0].is_seller);
+    if (error) {
+      console.log("Something went wrong");
+    }
+  };
+  useEffect(() => {
+    sellerUser();
+  }, []);
   return (
     <>
       <ScrollView style={{ backgroundColor: "white" }}>
@@ -75,7 +92,7 @@ export default function Profile() {
                     fontFamily: AmazonEmber,
                   }}
                 >
-                  Hello, xyz@gmail.com
+                  Hello, {session.user.email}
                 </Text>
                 <Icon name="chevron-down" size={20} />
               </View>

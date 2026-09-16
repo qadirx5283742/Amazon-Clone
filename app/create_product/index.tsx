@@ -2,16 +2,17 @@ import DefaultButton from "@/components/Shared/DefaultButton";
 import { AmazonEmber } from "@/utils/constant";
 import { AntDesign, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import Checkbox from "expo-checkbox";
+import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
-    Image,
-    Pressable,
-    ScrollView,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 export default function CreateProduct() {
@@ -26,7 +27,21 @@ export default function CreateProduct() {
   const [loading, setLoading] = useState(false);
 
   const [fileUrlGLB, setFileUrlGLB] = useState<string | null>(null);
-  const pickMedia = () => {};
+  const pickMedia = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== "granted") {
+      alert("Permission to access media library is required!");
+    }
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+    });
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri);
+    }
+  };
   const pickAndUploadGLB = () => {};
   const createProduct = () => {
     router.back();
