@@ -1,7 +1,12 @@
 import DefaultButton from "@/components/Shared/DefaultButton";
+import { RootState } from "@/store";
+import { supabase } from "@/supabase";
 import { AmazonEmber } from "@/utils/constant";
+import { glbUpload } from "@/utils/glbUpload";
+import { imageUpload } from "@/utils/imageUpload";
 import { AntDesign, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import Checkbox from "expo-checkbox";
+import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -14,8 +19,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useSelector } from "react-redux";
 
 export default function CreateProduct() {
+  const session = useSelector((state: RootState) => state.auth.session);
   const [name, setName] = useState<string>("");
   const [amountInStock, setAmountInStock] = useState<string>("");
   const [currentPrice, setCurrentPrice] = useState<string>("");
@@ -42,8 +49,37 @@ export default function CreateProduct() {
       setImageUri(result.assets[0].uri);
     }
   };
-  const pickAndUploadGLB = () => {};
-  const createProduct = () => {
+  const pickAndUploadGLB = async () => {
+    const result = await DocumentPicker.getDocumentAsync({
+      type: "*/*",
+      copyToCacheDirectory: true,
+    });
+    if (!result.canceled) {
+      setFileUrlGLB(result.assets[0].uri);
+    }
+  };
+  const createProduct = async () => {
+    setLoading(true);
+    const publicImageUrl = await imageUpload(imageUri, session?.access_token);
+    const glbUrl = await glbUpload(fileUrlGLB, session?.access_token);
+
+    const { data, error } = await supabase
+      .from("products")
+      .insert([
+        {
+          name,
+          amountInStock,
+          currentPrice,
+          previousPrice,
+          deliveryPrice,
+          deliveryInDays,
+          isAmazonChoice,
+          imageUrl: publicImageUrl,
+          model3DUrl: glbUrl ?? null,
+          user_id: session?.user?.id,
+        },
+      ])
+      .select();
     router.back();
   };
   return (

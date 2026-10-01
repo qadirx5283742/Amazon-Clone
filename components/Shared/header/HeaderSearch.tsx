@@ -6,12 +6,12 @@ import type { TextInput as TextInputType } from "react-native";
 import { Pressable, TextInput, View } from "react-native";
 
 export default function HeaderSearch() {
-  const segments = useSegments() as string[];
+  const segments = useSegments();
   const ref = useRef<TextInputType>(null);
   const [query, setQuery] = useState("");
 
-  const goToSearch = () => {
-    if (!segments.includes("(search)")) router.push("/(search)");
+  const onPressIn = () => {
+    if (segments[0] !== "(search)") router.push("/(search)");
   };
 
   const onGoBack = () => {
@@ -22,12 +22,12 @@ export default function HeaderSearch() {
   useDebouncedCallback(
     () => {
       if (query) router.setParams({ query });
-      if (segments.includes("(search)")) {
+      if (segments.length === 1 && segments[0] === "(search)") {
         ref.current?.focus();
       }
     },
-    [query, segments],
-    500
+    [query],
+    500,
   );
 
   return (
@@ -46,7 +46,7 @@ export default function HeaderSearch() {
         </Pressable>
       )}
 
-      <Pressable onPress={goToSearch} style={{ flex: 1 }}>
+      <Pressable onPress={onPressIn} style={{ flex: 1 }}>
         <View
           style={{
             flexDirection: "row",
@@ -61,20 +61,19 @@ export default function HeaderSearch() {
             shadowOpacity: 0.4,
             shadowRadius: 4,
             elevation: 3,
-            paddingRight: 10,
-            paddingLeft: 10,
           }}
         >
           <Icon name="search" color={"black"} size={24} />
           <TextInput
             ref={ref}
             value={query}
+            onPressIn={onPressIn}
             onChangeText={setQuery}
             editable={segments[0] === "(search)"}
             placeholder="Search Amazon"
-            placeholderTextColor="#b8bdc5ff"
+            // placeholderTextColor="#b8bdc5ff"
             style={{
-              flex: 1,
+              width: "75%",
               backgroundColor: "white",
               fontWeight: "800",
               fontSize: 20,

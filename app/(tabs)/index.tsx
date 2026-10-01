@@ -4,18 +4,19 @@ import { HeaderTabsProps } from "@/components/Shared/header/HeaderTabs";
 import HomeCarousel from "@/components/Shared/Screen/HomeCarousel";
 import HomeSuggestions from "@/components/Shared/Screen/HomeSuggestions";
 import ProductDealCard from "@/components/Shared/Screen/ProductDealCard";
-import { deals } from "@/dummy_data/product_deal";
 import { RootState } from "@/store";
+import { supabase } from "@/supabase";
 import { Product } from "@/types";
 import { AmazonEmberBold } from "@/utils/constant";
 import { router, useNavigation } from "expo-router";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Alert, ScrollView, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 
 export default function Home() {
   const navigation = useNavigation();
   const session = useSelector((state: RootState) => state.auth.session);
+  const [deals, setDeals] = useState<Product[]>([]);
   const tabs: HeaderTabsProps["tabs"] = [
     {
       active: true,
@@ -31,12 +32,21 @@ export default function Home() {
       onPress: () => Alert.alert("Video"),
     },
   ];
+  const getDeals = useCallback(async () => {
+    try {
+      const { data = [] } = await supabase.from("products").select("*");
+      setDeals(data as Product[]);
+    } catch (error) {
+      console.log("Error", error);
+    }
+  }, []);
   useEffect(() => {
     navigation.setOptions({
       headerSearchShown: true,
       headerTabsProps: { tabs },
     });
-  });
+    getDeals();
+  }, []);
   const onProductPress = ({ id }: Product) => {
     router.push(`/product/${id}`);
   };
