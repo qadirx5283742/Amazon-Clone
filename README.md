@@ -344,7 +344,7 @@ npm run web      # Web browser
 
 ## 📄 License
 
-Private project - All rights reserved.
+This project is MIT licensed - see the [LICENSE](LICENSE) file for details.
 
 ---
 
