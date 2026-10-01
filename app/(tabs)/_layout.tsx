@@ -16,6 +16,7 @@ interface Tab {
 
 export default function TabLayout() {
   const session = useSelector((state: RootState) => state.auth.session);
+  const cartItems = useSelector((state: RootState) => state.cart.items);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -43,8 +44,6 @@ export default function TabLayout() {
       icon: "cart-check",
     },
   ];
-
-  const cartItems = "Cart Items";
   return (
     <Tabs>
       {tabs.map((tab) => (

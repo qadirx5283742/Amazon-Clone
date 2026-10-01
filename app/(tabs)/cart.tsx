@@ -1,20 +1,83 @@
 import DefaultButton from "@/components/Shared/DefaultButton";
 import { DeliveryLocation } from "@/components/Shared/DeliveryLocation";
+import { HeaderTabsProps } from "@/components/Shared/header/HeaderTabs";
 import ProductCard from "@/components/Shared/Screen/ProductCard";
-import { RootState } from "@/store";
-import { router } from "expo-router";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import { useSelector } from "react-redux";
+import { persistor, RootState } from "@/store";
+import { clearCart } from "@/store/slices/cartSlice";
+import { supabase } from "@/supabase";
+import { deliveryDate } from "@/utils/deliveryDate";
+import { router, useNavigation } from "expo-router";
+import { useEffect, useState } from "react";
+import { Alert, Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Cart() {
+  const dispatch = useDispatch();
   const items = useSelector((state: RootState) => state.cart.items);
   const subTotal = useSelector((state: RootState) => state.cart.subTotal);
   const session = useSelector((state: RootState) => state.auth.session);
+  const [addressData, setAddressData] = useState<any | null>(null);
 
   const onClickSignIn = () => router.push("/(auth)");
   const onClickSignUp = () => router.push("/(auth)/signup");
+  const getUserAddress = async () => {
+    const { data: address, error: err } = await supabase
+      .from("profiles")
+      .select("full_name, location")
+      .eq("id", session?.user.id)
+      .single();
+    setAddressData(address);
+  };
 
-  const handleClearCart = () => {};
+  const handleClearCart = async () => {
+    const formattedOrders = items.map((item) => {
+      const { product, quantity } = item;
+      return {
+        product_name: product.name,
+        delivery_address: `${addressData?.full_name} ${addressData?.location}`,
+        image: product.imageUrl,
+        buyer_id: session?.user.id,
+        current_price: product.currentPrice,
+        delivery_date: deliveryDate(Number(product.deliveryInDays)),
+        delivery_price: product.deliveryPrice,
+        seller_id: product.user_id,
+        quantity,
+        total:
+          (Number(product.currentPrice) + Number(product.deliveryPrice)) *
+          Number(quantity),
+      };
+    });
+    const { data, error } = await supabase
+      .from("orders")
+      .insert(formattedOrders);
+    if (error) {
+      console.error("Error placing order:", error.message);
+    }
+    persistor.purge().then(() => {
+      console.log("persisted cart cleared!");
+      dispatch(clearCart());
+    });
+    router.push("/(buyer_zone)/thanks_buying");
+  };
+  const navigation = useNavigation();
+  const tabs: HeaderTabsProps["tabs"] = [
+    {
+      active: true,
+      title: "Basket",
+      onPress: () => Alert.alert("Basket"),
+    },
+  ];
+
+  useEffect(() => {
+    getUserAddress();
+  }, [addressData]);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerSearchShown: true,
+      headerTabsProps: { tabs },
+    });
+  }, [navigation]);
   return (
     <ScrollView
       style={style.container}

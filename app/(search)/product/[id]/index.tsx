@@ -1,4 +1,5 @@
 import DefaultButton from "@/components/Shared/DefaultButton";
+import { addItem } from "@/store/slices/cartSlice";
 import { supabase } from "@/supabase";
 import { Product } from "@/types";
 import { deliveryDate } from "@/utils/deliveryDate";
@@ -8,9 +9,11 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { Image, Modal, Text, TouchableOpacity, View } from "react-native";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
+import { useDispatch } from "react-redux";
 
 export default function ProductPage() {
   const { id } = useLocalSearchParams();
+  const dispatch = useDispatch();
   const [product, setProduct] = useState<Product | null>(null);
   const [selectOpen, setSelectOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
@@ -156,7 +159,9 @@ export default function ProductPage() {
             <Text>Quantity: {quantity}</Text>
             <MCIcon name="chevron-down" />
           </TouchableOpacity>
-          <DefaultButton onPress={() => console.log("Added to Basket")}>
+          <DefaultButton
+            onPress={() => dispatch(addItem({ product, quantity }))}
+          >
             Add to basket
           </DefaultButton>
           <DefaultButton
